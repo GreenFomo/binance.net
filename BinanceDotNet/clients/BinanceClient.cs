@@ -1,6 +1,8 @@
 ﻿using BinanceDotNet.exceptions;
 using BinanceDotNet.models;
 using BinanceDotNet.models.converters;
+using BinanceDotNet.models.enums;
+using BinanceDotNet.models.requests;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -28,17 +30,19 @@ namespace BinanceDotNet.clients {
         }
 
         public async Task<RawResponse> Ping() {
-            lastResponse = await _connecter.PublicRequest("v1/ping");
+            lastResponse = await _connecter.PublicRequest(new PingRequest());
             return lastResponse;
         }
 
         public async Task<RawResponse> GetTime() {
-            lastResponse = await _connecter.PublicRequest("v1/time");
+            lastResponse = await _connecter.PublicRequest(new TimeRequest());
             return lastResponse;
         }
 
         public async Task<Depth> GetDepth(string pair, int limit = 100) {
-            var resp = await _connecter.PublicRequest($"v1/depth?symbol={pair}&limit={limit}");
+            DepthRequest req = new DepthRequest() { Symbol = pair, Limit = limit };
+            
+            var resp = await _connecter.PublicRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<Depth>(resp.Content, new CustomDepthConverter());
@@ -46,7 +50,8 @@ namespace BinanceDotNet.clients {
 
         //
         public async Task<List<AggregateTrade>> GetAggTrades(string pair, long fromId = 0, long startTime = 0, long endTime = 0, int limit = 500) {
-            var resp = await _connecter.PublicRequest($"v1/aggTrades?symbol={pair}");
+            var req = new AggregateTradeRequest() { Symbol = pair };
+            var resp = await _connecter.PublicRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<AggregateTrade>>(resp.Content);
@@ -54,29 +59,39 @@ namespace BinanceDotNet.clients {
 
         //
         public async Task<List<Candlestick>> GetCandlesticks(string pair) {
-            var interval = "15m";
-            var resp = await _connecter.PublicRequest($"v1/klines?symbol={pair}&interval={interval}");
+            var interval = KlineInterval.Minutes15;
+            var req = new CandlestickRequest() { Symbol = pair, Interval = interval};
+            
+            Console.WriteLine(interval);
+
+            var resp = await _connecter.PublicRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Candlestick>>(resp.Content, new CustomCandlestickConverter());
         }
 
         public async Task<Ticker24hr> GetTicker24h(string pair) {
-            var resp = await _connecter.PublicRequest($"v1/ticker/24hr?symbol={pair}");
+            var req = new Ticker24hrRequest() { Symbol = pair };
+            var resp = await _connecter.PublicRequest(req);
+
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<Ticker24hr>(resp.Content);
         }
 
         public async Task<List<Ticker>> GetAllTickers() {
-            var resp = await _connecter.PublicRequest($"v1/ticker/allPrices");
+            var req = new AllPricesRequest();
+            var resp = await _connecter.PublicRequest(req);
+
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Ticker>>(resp.Content);
         }
 
         public async Task<List<BookTicker>> GetBookTickers() {
-            var resp = await _connecter.PublicRequest($"v1/ticker/allBookTickers");
+            var req = new BookTickersRequest();
+            var resp = await _connecter.PublicRequest(req);
+
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<BookTicker>>(resp.Content);
@@ -85,85 +100,69 @@ namespace BinanceDotNet.clients {
 
         //
         public async Task<AccountInfo> GetAccountInfo() {
-            var resp = await _connecter.PrivateRequest("v3/account", null);
+            var req = new AccountInfoRequest();
+            var resp = await _connecter.PrivateRequest(req);
+
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<AccountInfo>(resp.Content);
         }
 
         public async Task<List<Order>> GetAllOrders(string symbol) {
-            var data = new Dictionary<string, string> {
-                {"symbol", symbol }
-            };
+            var req = new GetAllOrdersRequest() { Symbol = symbol };
 
-            var resp = await _connecter.PrivateRequest("v3/allOrders", data);
+            var resp = await _connecter.PrivateRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Order>>(resp.Content);
         }
 
         public async Task<List<Order>> GetOpenOrders(string symbol) {
-            var data = new Dictionary<string, string> {
-                {"symbol", symbol }
-            };
+            var req = new GetOpenOrdersRequest() { Symbol = symbol };
 
-            var resp = await _connecter.PrivateRequest("v3/openOrders", data);
+            var resp = await _connecter.PrivateRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Order>>(resp.Content);
         }
 
-        public async Task<Order> GetOrder(string symbol, string origClientOrderId = null, long orderId = -1) {
-            if (origClientOrderId == null && orderId == -1) {
-                throw new BinanceBadApiRequest("For GET /order endpoint, you must specify either the original client order ID, or the order ID generated by Binance");
-            }
-            var data = new Dictionary<string, string> {
-                {"symbol", symbol }
-            };
-
-            var resp = await _connecter.PrivateRequest("v3/order", data);
+        public async Task<Order> GetOrder(string symbol, string origClientOrderId = null, long? orderId = null) {
+            var req = new GetOrderRequest() { Symbol = symbol, OrigClientOrderId = origClientOrderId, OrderId = orderId };
+            var resp = await _connecter.PrivateRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<Order>(resp.Content);
         }
 
         public async Task<CancelledOrder> CancelOrder(string symbol, string origClientOrderId = null, long orderId = -1) {
-            if (origClientOrderId == null && orderId == -1) {
-                throw new BinanceBadApiRequest("For DELETE /order endpoint, you must specify either the original client order ID, or the order ID generated by Binance");
-            }
-            var data = new Dictionary<string, string> {
-                {"symbol", symbol }
-            };
+            var req = new CancelOrderRequest() { Symbol = symbol, OrigClientOrderId = origClientOrderId, OrderId = orderId };
+            var resp = await _connecter.PrivateRequest(req);
 
-            var resp = await _connecter.PrivateRequest("v3/order", data, HttpMethod.Delete);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<CancelledOrder>(resp.Content);
         }
 
         public async Task<List<MyTrade>> GetMyTrades(string symbol) {
-            var data = new Dictionary<string, string> {
-                {"symbol", symbol }
-            };
+            var req = new GetMyTradesRequest() { Symbol = symbol };
 
-            var resp = await _connecter.PrivateRequest("v3/myTrades", data);
+            var resp = await _connecter.PrivateRequest(req);
             lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<MyTrade>>(resp.Content);
         }
 
-        public async Task<RawResponse> TestNewOrder(string symbol) {
-            var data = new Dictionary<string, string> {
-                { "symbol", symbol },
-                { "side", "SELL" },
-                { "recvWindow", "6500" },
-                { "type", "LIMIT" },
-                { "timeInForce", "GTC" },
-                { "quantity", "1000" },
-                { "price", "0.001" }
+        public async Task<RawResponse> TestNewOrder(string symbol, OrderSide side, OrderType type, TimeInForce timeInForce, decimal qty, decimal price) {
+            var req = new PlaceOrderTestRequest() {
+                Symbol = symbol,
+                Side =side,
+                Type = type,
+                TimeInForce = timeInForce,
+                Quantity = qty,
+                Price = price
             };
 
-            lastResponse = await _connecter.PrivateRequest("v3/order/test", data, HttpMethod.Post);
+            lastResponse = await _connecter.PrivateRequest(req);
 
             return lastResponse;
         }

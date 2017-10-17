@@ -1,6 +1,7 @@
 ﻿using BinanceDotNet.clients;
 using BinanceDotNet.exceptions;
 using BinanceDotNet.models;
+using BinanceDotNet.models.enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -47,11 +48,13 @@ namespace BinanceDotNetExamples.controls {
         private async void getAllOrders(object sender, RoutedEventArgs e) {
             List<Order> orders = await Api.GetAllOrders(GetPair());
             responseBox.Text = $"Orders retrieved: {orders.Count}";
+            UpdateUi(orders);
         }
 
         private async void getOpenOrders(object sender, RoutedEventArgs e) {
             List<Order> orders = await Api.GetOpenOrders(GetPair());
             responseBox.Text = $"Orders retrieved: {orders.Count}";
+            UpdateUi(orders);
         }
 
         private async void getOrder(object sender, RoutedEventArgs e) {
@@ -77,7 +80,7 @@ namespace BinanceDotNetExamples.controls {
         }
 
         private async void testNewOrder(object sender, RoutedEventArgs e) {
-            var resp = await Api.TestNewOrder(GetPair());
+            var resp = await Api.TestNewOrder(GetPair(), OrderSide.Buy, OrderType.Limit, TimeInForce.GoodTillCancelled, 100, 0.1m);
             responseBox.Text = resp.Content;
             UpdateUi<List>(null);
         }

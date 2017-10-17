@@ -16,7 +16,7 @@ namespace BinanceDotNet.models {
             return rr;
         }
 
-        private RawResponse() {
+        public RawResponse() {
             
 
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BinanceDotNet.models.enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,10 @@ namespace BinanceDotNet.models {
         public decimal Price { get; set; }
         public decimal OrigQty { get; set; }
         public decimal ExecutedQty { get; set; }
-        public string Status { get; set; }
-        public string TimeInForce { get; set; }
-        public string Type { get; set; }
-        public string Side { get; set; }
+        public OrderStatus Status { get; set; }
+        public TimeInForce TimeInForce { get; set; }
+        public OrderType Type { get; set; }
+        public OrderSide Side { get; set; }
         public decimal StopPrice { get; set; }
         public decimal IcebergQty { get; set; }
         public long Time { get; set; }
