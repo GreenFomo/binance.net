@@ -5,4 +5,6 @@ BinanceDotNet/obj/*
 BinanceDotNetExamples/bin/*
 BinanceDotNetExamples/obj/*
 
+BinanceDotNetExamples/secrets.json
+
 packages

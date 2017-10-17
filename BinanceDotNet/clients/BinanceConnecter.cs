@@ -15,8 +15,8 @@ namespace BinanceDotNet.clients {
         private const string BASE = "https://www.binance.com/api/";
         private const string BASE_ORDER = BASE + "/v3/";
 
-        private const string KEY = "2hL5U6keDbQuEhM13LszKMMDNmaZTLgZZIoKKk2RYMOAhzVMU2DIq5roZvdpLwcE";
-        private const string SECRET = "OTMvwc0YtJI1mL0IzGPvhHryFJVhThe1qgoTWAHgRBeZ95grZvZSo03JSS7Q9mHK";
+        private string apiKey;
+        private string apiSecret;
 
         private HttpClient _client;
 
@@ -26,8 +26,22 @@ namespace BinanceDotNet.clients {
             };
         }
 
+        public BinanceConnecter(ClientConfig cfg) : this() {
+            if (cfg != null)
+                SetApiDetails(cfg.ApiKey, cfg.ApiSecret);
+        }
+
+        public void SetApiDetails(string _apiKey, string _apiSecret) {
+            apiKey = _apiKey;
+            apiSecret = _apiSecret;
+        }
+
+
         public async Task<RawResponse> PrivateRequest(string url, Dictionary<string, string> data, HttpMethod method = null) {
-            
+            if (apiKey == null || apiSecret == null) {
+                throw new BinanceClientNotConfigured($"API key and API secret must be set before making private/signed requests. Provided: {apiKey}, {apiSecret}");
+            }
+
             if (data == null) {
                 data = new Dictionary<string, string>();
             }
@@ -55,13 +69,13 @@ namespace BinanceDotNet.clients {
         public async Task<RawResponse> PublicRequest(string url, Dictionary<string, string> data = null) {
             var response = await ReqAsync(url);
             return await RawResponse.FromHttpResponse(response);
-            
-            
+
+
         }
 
         private string SignRequest(string input) {
             var encoding = new UTF8Encoding();
-            byte[] keyByte = encoding.GetBytes(SECRET);
+            byte[] keyByte = encoding.GetBytes(apiSecret);
             byte[] messageBytes = encoding.GetBytes(input);
 
             using (var hmacsha256 = new HMACSHA256(keyByte)) {
@@ -74,13 +88,13 @@ namespace BinanceDotNet.clients {
 
         private async Task<HttpResponseMessage> ReqAsync(string url, HttpMethod method = null, bool apiAuth = false) {
             var requestMessage = new HttpRequestMessage(method ?? HttpMethod.Get, url);
-            
+
             //requestMessage.Headers.Authorization = new AuthenticationHeaderValue("X-MBX-APIKEY", KEY);
 
             if (apiAuth) {
-                requestMessage.Headers.Add("X-MBX-APIKEY", KEY);
+                requestMessage.Headers.Add("X-MBX-APIKEY", apiKey);
             }
-            
+
             return await _client.SendAsync(requestMessage);
         }
     }

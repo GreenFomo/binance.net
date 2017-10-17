@@ -19,6 +19,14 @@ namespace BinanceDotNet.clients {
             _connecter = new BinanceConnecter();
         }
 
+        public BinanceClient(ClientConfig _cfg) {
+            _connecter = new BinanceConnecter(_cfg);
+        }
+
+        public void SetApiDetails(string _apiKey, string _apiSecret) {
+            _connecter.SetApiDetails(_apiKey, _apiSecret);
+        }
+
         public async Task<RawResponse> Ping() {
             lastResponse = await _connecter.PublicRequest("v1/ping");
             return lastResponse;

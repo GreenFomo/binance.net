@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="446" Width="688.5" WindowState="Maximized"  Padding="10">
 
-  <Grid>
+  <StackPanel>
     <ComboBox Name="pairSelector" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="250,0,0,0" Panel.ZIndex="100">
       <ComboBoxItem IsSelected="True">ETH/BTC</ComboBoxItem>
       <ComboBoxItem >BNB/BTC</ComboBoxItem>
@@ -18,15 +18,29 @@
 
         <controls:PublicTab x:Name="PublicTabControl"  Padding="10"></controls:PublicTab>
       </TabItem>
-      
+
       <TabItem Header="Signed reqs">
         <controls:SignedTab x:Name="SignedTabControl" />
       </TabItem>
-      
+
       <TabItem Header="Websockets">
         <controls:WebsocketsTab x:Name="WebsocketsTabControl" />
       </TabItem>
     </TabControl>
 
-  </Grid>
+    <StackPanel Orientation="Horizontal" Name="apiPanel">
+      <Label>API Key:</Label>
+      <TextBox Width="200" Name="apiKeyBox"/>
+
+      <Label>API Secret:</Label>
+      <TextBox Width="200" Name="apiSecretBox" />
+      
+      <Button Name="setApiBtn" Click="setApi">
+        Set
+      </Button>
+    </StackPanel>
+    
+    <TextBlock Margin="10" Name="apiInfo" Foreground="Green" Text="API details loaded from secrets file" Visibility="Collapsed" />
+
+  </StackPanel>
 </Window>

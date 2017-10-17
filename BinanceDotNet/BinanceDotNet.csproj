@@ -47,6 +47,7 @@
     <Compile Include="clients\BinanceConnecter.cs" />
     <Compile Include="clients\BinanceSocketClient.cs" />
     <Compile Include="exceptions\BinanceBadApiRequest.cs" />
+    <Compile Include="exceptions\BinanceClientNotConfigured.cs" />
     <Compile Include="exceptions\BinanceFailedRequest.cs" />
     <Compile Include="models\AccountBalance.cs" />
     <Compile Include="models\AccountInfo.cs" />
@@ -56,10 +57,14 @@
     <Compile Include="models\BookTicker.cs" />
     <Compile Include="models\CancelledOrder.cs" />
     <Compile Include="models\Candlestick.cs" />
+    <Compile Include="models\ClientConfig.cs" />
     <Compile Include="models\converters\CustomCandlestickConverter.cs" />
     <Compile Include="models\converters\CustomDepthConverter.cs" />
     <Compile Include="models\converters\OriginalPropertyContractResolver.cs" />
     <Compile Include="models\Depth.cs" />
+    <Compile Include="models\enums\OrderStatus.cs" />
+    <Compile Include="models\enums\Value.cs" />
+    <Compile Include="models\enums\ValueExtension.cs" />
     <Compile Include="models\MyTrade.cs" />
     <Compile Include="models\Order.cs" />
     <Compile Include="models\PriceQty.cs" />
