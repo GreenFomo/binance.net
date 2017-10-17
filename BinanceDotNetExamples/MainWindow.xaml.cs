@@ -41,12 +41,11 @@ namespace BinanceDotNetExamples {
             SignedTabControl.Api = _api;
             WebsocketsTabControl.Api = _socketApi;
 
+            WebsocketsTabControl.UserStreamApi = new BinanceUserStream() { HttpApi = _api, SocketApi = _socketApi };
+
             PublicTabControl.GetPair = GetSelectedPair;
             SignedTabControl.GetPair = GetSelectedPair;
             WebsocketsTabControl.GetPair = GetSelectedPair;
-
-
-
         }
 
         private string GetSelectedPair() {

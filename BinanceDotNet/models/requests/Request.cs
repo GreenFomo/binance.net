@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace BinanceDotNet.models.requests {
     public abstract class Request {
+        public bool UseApiKey { get; set; }
         public abstract bool IsValid();
         public abstract string BuildUrl();
         public HttpMethod Method { get; set; }
 
         public Request() {
             Method = HttpMethod.Get;
+            UseApiKey = false;
         }
 
         public bool ValidateRequireds(List<string> propNames) {

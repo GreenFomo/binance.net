@@ -41,7 +41,7 @@ namespace BinanceDotNet.clients {
 
         public async Task<Depth> GetDepth(string pair, int limit = 100) {
             DepthRequest req = new DepthRequest() { Symbol = pair, Limit = limit };
-            
+
             var resp = await _connecter.PublicRequest(req);
             lastResponse = resp;
 
@@ -60,8 +60,8 @@ namespace BinanceDotNet.clients {
         //
         public async Task<List<Candlestick>> GetCandlesticks(string pair) {
             var interval = KlineInterval.Minutes15;
-            var req = new CandlestickRequest() { Symbol = pair, Interval = interval};
-            
+            var req = new CandlestickRequest() { Symbol = pair, Interval = interval };
+
             Console.WriteLine(interval);
 
             var resp = await _connecter.PublicRequest(req);
@@ -155,7 +155,7 @@ namespace BinanceDotNet.clients {
         public async Task<RawResponse> TestNewOrder(string symbol, OrderSide side, OrderType type, TimeInForce timeInForce, decimal qty, decimal price) {
             var req = new PlaceOrderTestRequest() {
                 Symbol = symbol,
-                Side =side,
+                Side = side,
                 Type = type,
                 TimeInForce = timeInForce,
                 Quantity = qty,
@@ -167,6 +167,19 @@ namespace BinanceDotNet.clients {
             return lastResponse;
         }
 
+        public async Task<UserDataEndpoint> StartUserStream() {
+            var req = new StartUserStreamRequest();
+            lastResponse = await _connecter.PublicRequest(req);
+
+            return JsonConvert.DeserializeObject<UserDataEndpoint>(lastResponse.Content);
+        }
+
+        public async Task<RawResponse> DeleteUserStream(string listenKey) {
+            var req = new DeleteUserStreamRequest() { ListenKey = listenKey };
+            lastResponse = await _connecter.PublicRequest(req);
+
+            return lastResponse;
+        }
 
     }
 }

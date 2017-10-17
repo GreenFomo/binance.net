@@ -47,6 +47,7 @@
     <Compile Include="clients\BinanceClient.cs" />
     <Compile Include="clients\BinanceConnecter.cs" />
     <Compile Include="clients\BinanceSocketClient.cs" />
+    <Compile Include="clients\BinanceUserStream.cs" />
     <Compile Include="exceptions\BinanceBadApiRequest.cs" />
     <Compile Include="exceptions\BinanceClientNotConfigured.cs" />
     <Compile Include="exceptions\BinanceFailedRequest.cs" />
@@ -76,9 +77,11 @@
     <Compile Include="models\requests\AccountInfoRequest.cs" />
     <Compile Include="models\requests\AggregateTradeRequest.cs" />
     <Compile Include="models\requests\AllPricesRequest.cs" />
+    <Compile Include="models\requests\ApiKeyRequest.cs" />
     <Compile Include="models\requests\BookTickersRequest.cs" />
     <Compile Include="models\requests\CancelOrderRequest.cs" />
     <Compile Include="models\requests\CandlestickRequest.cs" />
+    <Compile Include="models\requests\DeleteUserStreamRequest.cs" />
     <Compile Include="models\requests\DepthRequest.cs" />
     <Compile Include="models\requests\GetAllOrdersRequest.cs" />
     <Compile Include="models\requests\GetMyTradesRequest.cs" />
@@ -90,12 +93,15 @@
     <Compile Include="models\requests\PlaceOrderRequest.cs" />
     <Compile Include="models\requests\Request.cs" />
     <Compile Include="models\requests\SignedRequest.cs" />
+    <Compile Include="models\requests\StartUserStreamRequest.cs" />
     <Compile Include="models\requests\Ticker24hrRequest.cs" />
     <Compile Include="models\requests\TimeRequest.cs" />
+    <Compile Include="models\requests\UserStreamRequest.cs" />
     <Compile Include="models\Response.cs" />
     <Compile Include="models\SymbolPair.cs" />
     <Compile Include="models\Ticker.cs" />
     <Compile Include="models\Ticker24hr.cs" />
+    <Compile Include="models\UserDataEndpoint.cs" />
     <Compile Include="models\WsBase.cs" />
     <Compile Include="models\WsKline.cs" />
     <Compile Include="models\WsKlineInner.cs" />

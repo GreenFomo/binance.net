@@ -31,6 +31,9 @@ namespace BinanceDotNet.clients {
             await ConnectAsync($"wss://stream.binance.com:9443/ws/{pair.ToLower()}@aggTrade", fn);
         }
 
+        public async void StartListenUserStream(string endpoint, Action<string> fn) {
+            await ConnectAsync($"wss://stream.binance.com:9443/ws/{endpoint}", fn);
+        }
 
         private async Task ConnectAsync<T>(string uri, Action<T> fn = null) {
             Console.WriteLine(uri);

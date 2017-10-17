@@ -21,6 +21,7 @@ namespace BinanceDotNetExamples.controls {
     /// Interaction logic for WebsocketsTab.xaml
     /// </summary>
     public partial class WebsocketsTab : UserControl {
+        public BinanceUserStream UserStreamApi { get; set; }
         public BinanceSocketClient Api { get; set; }
         public bool SocketRunning { get; set; }
         public Func<string> GetPair;
@@ -69,6 +70,7 @@ namespace BinanceDotNetExamples.controls {
 
         private async void stopWs(object sender, RoutedEventArgs e) {
             Api.Stop();
+            UserStreamApi.Stop();
             ToggleStartButtons(true);
         }
 
@@ -76,8 +78,16 @@ namespace BinanceDotNetExamples.controls {
             startDepthBtn.IsEnabled = value;
             startKlineBtn.IsEnabled = value;
             startTradesBtn.IsEnabled = value;
+            startUserStreamBtn.IsEnabled = value;
 
             stopBtn.IsEnabled = !value;
+        }
+
+        private async void startUserStream(object sender, RoutedEventArgs e) {
+            UserStreamApi.Start((line) => {
+                Console.WriteLine("In ws: " + line);
+            });
+            ToggleStartButtons(false);
         }
 
     }

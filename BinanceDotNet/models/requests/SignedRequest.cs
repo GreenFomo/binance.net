@@ -6,12 +6,13 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace BinanceDotNet.models.requests {
-    public abstract class SignedRequest : Request {
+    public abstract class SignedRequest : ApiKeyRequest {
         public long Timestamp { get; set; }
         public string Symbol { get; set; }
 
         public SignedRequest() {
             Timestamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            UseApiKey = true;
         }
 
         public abstract Dictionary<string, string> BuildQueryString();

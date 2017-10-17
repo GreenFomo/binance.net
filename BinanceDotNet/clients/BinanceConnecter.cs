@@ -37,10 +37,6 @@ namespace BinanceDotNet.clients {
             apiSecret = _apiSecret;
         }
 
-        public async Task<RawResponse> PrivateRequest(string url, Dictionary<string, string> data, HttpMethod method = null) {
-            return new RawResponse();
-        }
-
         public async Task<RawResponse> PrivateRequest(SignedRequest req) {
             if (apiKey == null || apiSecret == null) {
                 throw new BinanceClientNotConfigured($"API key and API secret must be set before making private/signed requests. Provided: {apiKey}, {apiSecret}");
@@ -51,7 +47,7 @@ namespace BinanceDotNet.clients {
                 throw new Exception("Signed Request not valid");
             }
 
-            var response = await ReqAsync(req.BuildSignedUrl(apiSecret), req.Method, true);
+            var response = await ReqAsync(req.BuildSignedUrl(apiSecret), req.Method, req.UseApiKey);
             Console.WriteLine("URL: " + response.RequestMessage.RequestUri.ToString());
             Console.WriteLine(response.StatusCode);
 
@@ -61,14 +57,13 @@ namespace BinanceDotNet.clients {
             return await RawResponse.FromHttpResponse(response);
         }
 
-        public async Task<RawResponse> PublicRequest(Request req, Dictionary<string, string> data = null) {
+        public async Task<RawResponse> PublicRequest(Request req) {
 
             if (!req.IsValid())
                 throw new Exception("WTF");
-            var response = await ReqAsync(req.BuildUrl());
+
+            var response = await ReqAsync(req.BuildUrl(), req.Method, req.UseApiKey);
             return await RawResponse.FromHttpResponse(response);
-
-
         }
 
 

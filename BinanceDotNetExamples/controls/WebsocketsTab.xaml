@@ -12,6 +12,8 @@
       <Button Content="Start KLine" Name="startKlineBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startKline"/>
       <Button Content="Start Trades" Name="startTradesBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startTrades"/>
 
+      <Button Content="Start User stream" Name="startUserStreamBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startUserStream"/>
+
       <Button Content="Stop" Name="stopBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="stopWs" IsEnabled="false"/>
     </StackPanel>
     

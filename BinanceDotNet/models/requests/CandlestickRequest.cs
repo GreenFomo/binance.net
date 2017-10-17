@@ -1,9 +1,6 @@
 ﻿using BinanceDotNet.models.enums;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static BinanceDotNet.extensions.EnumHelper;
 
 namespace BinanceDotNet.models.requests {
     public class CandlestickRequest : RequestWithSymbol {
@@ -13,7 +10,7 @@ namespace BinanceDotNet.models.requests {
         public long EndTime { get; set; }
 
         public override string BuildUrl() {
-            return $"v1/klines?symbol={Symbol}&interval={Interval}";
+            return $"v1/klines?symbol={Symbol}&interval={Interval.GetValue()}";
         }
 
         public override bool IsValid() {
