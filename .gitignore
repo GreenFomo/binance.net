@@ -1,0 +1,8 @@
+.vs
+BinanceDotNet/bin/*
+BinanceDotNet/obj/*
+
+BinanceDotNetExamples/bin/*
+BinanceDotNetExamples/obj/*
+
+packages

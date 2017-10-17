@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="BinanceDotNetExamples.controls.WebsocketsTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BinanceDotNetExamples.controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="500">
+  <StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Button Content="Start depth" Name="startDepthBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startDepth"/>
+      <Button Content="Start KLine" Name="startKlineBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startKline"/>
+      <Button Content="Start Trades" Name="startTradesBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startTrades"/>
+
+      <Button Content="Stop" Name="stopBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="stopWs" IsEnabled="false"/>
+    </StackPanel>
+    
+    <DataGrid Height="500" Name="outDg" IsReadOnly="True">
+      
+    </DataGrid>
+  </StackPanel>
+</UserControl>
