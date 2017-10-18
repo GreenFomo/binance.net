@@ -6,6 +6,7 @@ The repo also contains a WPF desktop app that demonstrates the usage of the Bina
 # TODO
 - [ ] Write docs on how to use the clients (partially done)
 - [ ] Test real orders.
+- [ ] Caching
 - [X] Add enums for each API enum.
 - [X] Add missing optional params from requests
 - [X] Validate request params (encapsulate validator logic)
@@ -115,13 +116,14 @@ decimal bidQty = ticker.BidQty;
 ```csharp
 //See BinanceClient#TestNewOrder for the order of the optional parameters
 RawResponse response = await httpClient.TestNewOrder(
-  "ETHBTC", OrderSide.Buy, OrderType.Limit, TimeInForce.GoodTillCancelled, 100, 0.01)
+  "ETHBTC", OrderSide.Buy, OrderType.Limit, 
+  TimeInForce.GoodTillCancelled, 100, 0.01
 );
 ```
 
 #### `GET /api/v3/order`
 ```csharp
-//See BinanceClient#TestNewOrder for the order of the optional parameters
+//See BinanceClient#GetOrder for the order of the optional parameters
 Order order  = await httpClient.GetOrder("ETHBTC", "1234");
 
 string symbol = order.Symbol;
@@ -173,7 +175,29 @@ decimal qty = trade.Qty;
 ```
 
 ### User stream endpoints
-TODO: explain how BinanceUserStream takes care of handling the User data stream WS.
+The requests described below can be used manually to interact with user stream-related endpoints.
+
+However, it is easier to use the `BinanceUserStream` class, which encapsulates the logic for starting, keeping alive and stopping a user data stream.
+
+```csharp
+BinanceSocketClient socketApi = new BinanceSocketClient();
+BinanceClient httpApi = new BinanceClient(
+	new ClientConfig("<API KEY>", "<API SECRET>")
+);
+
+BinanceUserStream streamApi = new BinanceUserStream() {
+	HttpApi = httpApi,
+	SocketApi = socketApi
+};
+await streamApi.Start((line) => {
+	//line is the raw string containing the response from the User stream websocket
+});
+
+await streamApi.Stop();
+```
+
+This takes care of keeping alive the connection as well, by regularly pinging the appropriate endpoint.
+When stopping, the `listenKey` will also be deleted via the `delete` request.
 
 #### `POST /api/v1/userDataStream`
 ```csharp

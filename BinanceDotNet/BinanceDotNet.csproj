@@ -66,6 +66,7 @@
     <Compile Include="models\converters\CustomDepthConverter.cs" />
     <Compile Include="models\converters\OriginalPropertyContractResolver.cs" />
     <Compile Include="models\Depth.cs" />
+    <Compile Include="models\DepthViewItem.cs" />
     <Compile Include="models\enums\KlineInterval.cs" />
     <Compile Include="models\enums\OrderSide.cs" />
     <Compile Include="models\enums\OrderStatus.cs" />

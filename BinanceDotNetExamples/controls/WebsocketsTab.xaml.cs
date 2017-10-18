@@ -27,13 +27,13 @@ namespace BinanceDotNetExamples.controls {
         public bool SocketRunning { get; set; }
         public Func<string> GetPair;
 
-        private List<Depth> depthDataSource;
+        private List<DepthViewItem> depthDataSource;
         private List<WsKline> klineDataSource;
         private List<WsTrade> tradesDataSource;
 
         public WebsocketsTab() {
             InitializeComponent();
-            depthDataSource = new List<Depth>();
+            depthDataSource = new List<DepthViewItem>();
             klineDataSource = new List<WsKline>();
             tradesDataSource = new List<WsTrade>();
         }
@@ -42,8 +42,11 @@ namespace BinanceDotNetExamples.controls {
             outDg.ItemsSource = depthDataSource;
 
             SocketApi.StartDepth(GetPair(), (wsDepth) => {
-                depthDataSource.Add(wsDepth);
+                var items = DepthViewItem.BuildFromDepth(wsDepth);
+                depthDataSource.AddRange(items);
                 outDg.Items.Refresh();
+
+                outDg.ScrollIntoView(outDg.Items[outDg.Items.Count - 1]);
             });
 
             gbox.Header = SocketApi.LastUrl;
