@@ -15,14 +15,14 @@ namespace BinanceDotNet.models.requests {
             UseApiKey = true;
         }
 
-        public abstract Dictionary<string, string> BuildQueryString();
+        public abstract Dictionary<string, string> BuildQueryParams();
 
         public string BuildSignedUrl(string secret) {
-            var data = BuildQueryString();
+            var data = BuildQueryParams();
             data["timestamp"] = Timestamp.ToString();
 
-            var query = data.Select(kv => String.Format("{0}={1}", kv.Key, Uri.EscapeDataString(kv.Value))).ToArray();
-            var qs = String.Join("&", query);
+            var qs = BuildQueryStringFromParams(data);
+
             Console.WriteLine(qs);
 
             var sig = SignRequest(qs, secret);

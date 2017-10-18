@@ -11,7 +11,10 @@ using System.Threading.Tasks;
 
 namespace BinanceDotNet.clients {
     public class BinanceSocketClient {
+        public string LastUrl { get { return _lastUrl; } }
+        private string _lastUrl;
 
+        public readonly string WsEndpoint = "wss://stream.binance.com:9443/ws";
         public bool running;
 
         public void Stop() {
@@ -19,27 +22,36 @@ namespace BinanceDotNet.clients {
         }
 
         public async void StartDepth(string pair, Action<Depth> fn) {
-            await ConnectAsync($"wss://stream.binance.com:9443/ws/{pair.ToLower()}@depth", fn);
+            UpdateUrl($"{pair.ToLower()}@depth");
+
+            await ConnectAsync(_lastUrl, fn);
         }
 
         public async void StartKline(string pair, string interval, Action<WsKline> fn) {
-            await ConnectAsync($"wss://stream.binance.com:9443/ws/{pair.ToLower()}@{interval}", fn);
+            UpdateUrl($"{pair.ToLower()}@{interval}");
+
+            await ConnectAsync(_lastUrl, fn);
         }
 
         public async void StartTrades(string pair, Action<WsTrade> fn) {
-            Console.WriteLine("YO");
-            await ConnectAsync($"wss://stream.binance.com:9443/ws/{pair.ToLower()}@aggTrade", fn);
+            UpdateUrl($"{pair.ToLower()}@aggTrade");
+
+            await ConnectAsync(_lastUrl, fn);
         }
 
-        public async void StartListenUserStream(string endpoint, Action<string> fn) {
-            await ConnectAsync($"wss://stream.binance.com:9443/ws/{endpoint}", fn);
+        public async void StartListenUserStream(string listenKey, Action<string> fn) {
+            UpdateUrl(listenKey);
+
+            await ConnectAsync(_lastUrl, fn);
+        }
+
+        private void UpdateUrl(string part) {
+            _lastUrl = $"{WsEndpoint}/{part}";
         }
 
         private async Task ConnectAsync<T>(string uri, Action<T> fn = null) {
-            Console.WriteLine(uri);
-
             using (var socket = new ClientWebSocket()) {
-                Uri serverUri = new Uri(uri);
+                Uri serverUri = new Uri(LastUrl);
                 running = true;
 
                 await socket.ConnectAsync(serverUri, CancellationToken.None);
@@ -49,22 +61,24 @@ namespace BinanceDotNet.clients {
 
                     WebSocketReceiveResult result = await socket.ReceiveAsync(bytesReceived, CancellationToken.None);
                     var line = Encoding.UTF8.GetString(bytesReceived.Array, 0, result.Count);
-                    Console.WriteLine(line);
+                    Console.WriteLine("Line: " + line);
 
                     JsonSerializerSettings settings = new JsonSerializerSettings();
 
-                    Type listType = typeof(T);
+                    Type type = typeof(T);
 
-                    if (listType == typeof(Depth)) {
+                    if (type == typeof(Depth)) {
                         var obj = JsonConvert.DeserializeObject<T>(line, new CustomDepthConverter("u", "b", "a"));
                         fn?.Invoke(obj);
+                    } else if (type == typeof(string)) {
+                        Console.WriteLine("[WS-string]: " + line);
                     } else {
                         var obj = JsonConvert.DeserializeObject<T>(line);
                         fn?.Invoke(obj);
                     }
 
+                    }
                 }
             }
         }
     }
-}

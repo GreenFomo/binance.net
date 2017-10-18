@@ -39,7 +39,7 @@ namespace BinanceDotNetExamples {
 
             PublicTabControl.Api = _api;
             SignedTabControl.Api = _api;
-            WebsocketsTabControl.Api = _socketApi;
+            WebsocketsTabControl.SocketApi = _socketApi;
 
             WebsocketsTabControl.UserStreamApi = new BinanceUserStream() { HttpApi = _api, SocketApi = _socketApi };
 
@@ -52,7 +52,7 @@ namespace BinanceDotNetExamples {
             return ((ComboBoxItem)pairSelector.SelectedValue).Content.ToString().Replace("/", "");
         }
 
-        private async void setApi(object sender, RoutedEventArgs e) {
+        private void SetApi(object sender, RoutedEventArgs e) {
             _api.SetApiDetails(apiKeyBox.Text, apiSecretBox.Text);
         }
     }

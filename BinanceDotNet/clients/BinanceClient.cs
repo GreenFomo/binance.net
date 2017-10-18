@@ -1,21 +1,17 @@
-﻿using BinanceDotNet.exceptions;
-using BinanceDotNet.models;
+﻿using BinanceDotNet.models;
 using BinanceDotNet.models.converters;
 using BinanceDotNet.models.enums;
 using BinanceDotNet.models.requests;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BinanceDotNet.clients {
     public class BinanceClient {
         private BinanceConnecter _connecter;
-        private RawResponse lastResponse;
-        public RawResponse LastResponse { get { return lastResponse; } }
+        
+        public RawResponse LastResponse { get { return _connecter.LastResponse; } }
 
         public BinanceClient() {
             _connecter = new BinanceConnecter();
@@ -30,20 +26,17 @@ namespace BinanceDotNet.clients {
         }
 
         public async Task<RawResponse> Ping() {
-            lastResponse = await _connecter.PublicRequest(new PingRequest());
-            return lastResponse;
+            return await _connecter.PublicRequest(new PingRequest()); ;
         }
 
         public async Task<RawResponse> GetTime() {
-            lastResponse = await _connecter.PublicRequest(new TimeRequest());
-            return lastResponse;
+            return await _connecter.PublicRequest(new TimeRequest());
         }
 
         public async Task<Depth> GetDepth(string pair, int limit = 100) {
             DepthRequest req = new DepthRequest() { Symbol = pair, Limit = limit };
 
             var resp = await _connecter.PublicRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<Depth>(resp.Content, new CustomDepthConverter());
         }
@@ -52,7 +45,6 @@ namespace BinanceDotNet.clients {
         public async Task<List<AggregateTrade>> GetAggTrades(string pair, long fromId = 0, long startTime = 0, long endTime = 0, int limit = 500) {
             var req = new AggregateTradeRequest() { Symbol = pair };
             var resp = await _connecter.PublicRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<AggregateTrade>>(resp.Content);
         }
@@ -65,7 +57,6 @@ namespace BinanceDotNet.clients {
             Console.WriteLine(interval);
 
             var resp = await _connecter.PublicRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Candlestick>>(resp.Content, new CustomCandlestickConverter());
         }
@@ -74,8 +65,6 @@ namespace BinanceDotNet.clients {
             var req = new Ticker24hrRequest() { Symbol = pair };
             var resp = await _connecter.PublicRequest(req);
 
-            lastResponse = resp;
-
             return JsonConvert.DeserializeObject<Ticker24hr>(resp.Content);
         }
 
@@ -83,16 +72,12 @@ namespace BinanceDotNet.clients {
             var req = new AllPricesRequest();
             var resp = await _connecter.PublicRequest(req);
 
-            lastResponse = resp;
-
             return JsonConvert.DeserializeObject<List<Ticker>>(resp.Content);
         }
 
         public async Task<List<BookTicker>> GetBookTickers() {
             var req = new BookTickersRequest();
             var resp = await _connecter.PublicRequest(req);
-
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<BookTicker>>(resp.Content);
 
@@ -103,8 +88,6 @@ namespace BinanceDotNet.clients {
             var req = new AccountInfoRequest();
             var resp = await _connecter.PrivateRequest(req);
 
-            lastResponse = resp;
-
             return JsonConvert.DeserializeObject<AccountInfo>(resp.Content);
         }
 
@@ -112,7 +95,6 @@ namespace BinanceDotNet.clients {
             var req = new GetAllOrdersRequest() { Symbol = symbol };
 
             var resp = await _connecter.PrivateRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Order>>(resp.Content);
         }
@@ -121,7 +103,6 @@ namespace BinanceDotNet.clients {
             var req = new GetOpenOrdersRequest() { Symbol = symbol };
 
             var resp = await _connecter.PrivateRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<Order>>(resp.Content);
         }
@@ -129,7 +110,6 @@ namespace BinanceDotNet.clients {
         public async Task<Order> GetOrder(string symbol, string origClientOrderId = null, long? orderId = null) {
             var req = new GetOrderRequest() { Symbol = symbol, OrigClientOrderId = origClientOrderId, OrderId = orderId };
             var resp = await _connecter.PrivateRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<Order>(resp.Content);
         }
@@ -138,8 +118,6 @@ namespace BinanceDotNet.clients {
             var req = new CancelOrderRequest() { Symbol = symbol, OrigClientOrderId = origClientOrderId, OrderId = orderId };
             var resp = await _connecter.PrivateRequest(req);
 
-            lastResponse = resp;
-
             return JsonConvert.DeserializeObject<CancelledOrder>(resp.Content);
         }
 
@@ -147,7 +125,6 @@ namespace BinanceDotNet.clients {
             var req = new GetMyTradesRequest() { Symbol = symbol };
 
             var resp = await _connecter.PrivateRequest(req);
-            lastResponse = resp;
 
             return JsonConvert.DeserializeObject<List<MyTrade>>(resp.Content);
         }
@@ -162,23 +139,26 @@ namespace BinanceDotNet.clients {
                 Price = price
             };
 
-            lastResponse = await _connecter.PrivateRequest(req);
-
-            return lastResponse;
+            return await _connecter.PrivateRequest(req);
         }
 
         public async Task<UserDataEndpoint> StartUserStream() {
             var req = new StartUserStreamRequest();
-            lastResponse = await _connecter.PublicRequest(req);
+            var resp = await _connecter.PublicRequest(req);
 
-            return JsonConvert.DeserializeObject<UserDataEndpoint>(lastResponse.Content);
+            return JsonConvert.DeserializeObject<UserDataEndpoint>(resp.Content);
+        }
+
+        public async Task<RawResponse> PingUserStream(string listenKey) {
+            var req = new PingUserStreamRequest() { ListenKey = listenKey };
+
+            return await _connecter.PublicRequest(req); ;
         }
 
         public async Task<RawResponse> DeleteUserStream(string listenKey) {
             var req = new DeleteUserStreamRequest() { ListenKey = listenKey };
-            lastResponse = await _connecter.PublicRequest(req);
 
-            return lastResponse;
+            return await _connecter.PublicRequest(req);
         }
 
     }

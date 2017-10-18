@@ -13,8 +13,13 @@ namespace BinanceDotNet.models.requests {
         public decimal Quantity { get; set; }
         public decimal Price { get; set; }
 
-        public override Dictionary<string, string> BuildQueryString() {
-            return new Dictionary<string, string>() {
+        public string NewClientOrderId { get; set; }
+        public decimal? StopPrice { get; set; }
+        public decimal? IcebergQty { get; set; }
+        public long? RecvWindow { get; set; }
+
+        public override Dictionary<string, string> BuildQueryParams() {
+            var qp = new Dictionary<string, string>() {
                 { "symbol", Symbol },
                 { "side", Side.GetValue() },
                 { "recvWindow", "6500" },
@@ -23,6 +28,20 @@ namespace BinanceDotNet.models.requests {
                 { "quantity", Quantity.ToString() },
                 { "price", Price.ToString() }
             };
+
+            if (NewClientOrderId != null)
+                qp.Add("newClientOrderId", NewClientOrderId);
+
+            if (StopPrice.HasValue)
+                qp.Add("stopPrice", StopPrice.ToString());
+
+            if (IcebergQty.HasValue)
+                qp.Add("icebergQty", IcebergQty.ToString());
+
+            if (RecvWindow.HasValue)
+                qp.Add("recvWindow", RecvWindow.ToString());
+
+            return qp;
         }
 
         public override string BuildUrl() {

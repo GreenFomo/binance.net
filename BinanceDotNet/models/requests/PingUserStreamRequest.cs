@@ -1,11 +1,11 @@
 ﻿using System.Net.Http;
 
 namespace BinanceDotNet.models.requests {
-    public class DeleteUserStreamRequest : UserStreamRequest {
+    public class PingUserStreamRequest : UserStreamRequest {
         public string ListenKey { get; set; }
 
-        public DeleteUserStreamRequest() : base() {
-            Method = HttpMethod.Delete;
+        public PingUserStreamRequest() : base() {
+            Method = HttpMethod.Put;
         }
 
         public override string BuildUrl() {

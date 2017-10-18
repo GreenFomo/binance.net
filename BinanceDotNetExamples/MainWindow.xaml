@@ -35,7 +35,7 @@
       <Label>API Secret:</Label>
       <TextBox Width="200" Name="apiSecretBox" />
       
-      <Button Name="setApiBtn" Click="setApi">
+      <Button Name="setApiBtn" Click="SetApi">
         Set
       </Button>
     </StackPanel>

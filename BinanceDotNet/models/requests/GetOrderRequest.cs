@@ -9,7 +9,7 @@ namespace BinanceDotNet.models.requests {
         public long? OrderId { get; set; }
         public string OrigClientOrderId { get; set; }
 
-        public override Dictionary<string, string> BuildQueryString() {
+        public override Dictionary<string, string> BuildQueryParams() {
             var dict = new Dictionary<string, string>() {
                 { "symbol", Symbol }
             };

@@ -8,17 +8,23 @@
              d:DesignHeight="500" d:DesignWidth="500">
   <StackPanel>
     <StackPanel Orientation="Horizontal">
-      <Button Content="Start depth" Name="startDepthBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startDepth"/>
-      <Button Content="Start KLine" Name="startKlineBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startKline"/>
-      <Button Content="Start Trades" Name="startTradesBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startTrades"/>
+      <Button Content="Start depth" Name="startDepthBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="StartDepth"/>
+      <Button Content="Start KLine" Name="startKlineBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="StartKline"/>
+      <Button Content="Start Trades" Name="startTradesBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="StartTrades"/>
 
-      <Button Content="Start User stream" Name="startUserStreamBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="startUserStream"/>
+      <Button Content="Start User stream" Name="startUserStreamBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="StartUserStream"/>
 
-      <Button Content="Stop" Name="stopBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="stopWs" IsEnabled="false"/>
+      <Button Content="Stop" Name="stopBtn" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Width="106" Click="StopWs" IsEnabled="false"/>
     </StackPanel>
     
-    <DataGrid Height="500" Name="outDg" IsReadOnly="True">
+    <GroupBox Header="--- Websocket URL here ---" Name="gbox">
+      <GroupBox.HeaderTemplate>
+        <DataTemplate>
+          <TextBlock Text="{Binding}" Foreground="Green" FontWeight="Bold" FontSize="15" Padding="5" HorizontalAlignment="Stretch" />
+        </DataTemplate>
+      </GroupBox.HeaderTemplate>
       
-    </DataGrid>
+      <DataGrid Height="500" Name="outDg" IsReadOnly="True" />
+    </GroupBox>
   </StackPanel>
 </UserControl>

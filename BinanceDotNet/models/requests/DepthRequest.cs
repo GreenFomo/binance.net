@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace BinanceDotNet.models.requests {
     public class DepthRequest : RequestWithSymbol {
-        public int Limit { get; set; }
+        public int? Limit { get; set; }
 
         public override string BuildUrl() {
+            Limit = Limit ?? 100;
+
             return $"v1/depth?symbol={Symbol}&limit={Limit}";
         }
 

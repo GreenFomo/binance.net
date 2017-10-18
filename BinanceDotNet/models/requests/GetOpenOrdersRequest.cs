@@ -3,7 +3,7 @@
 namespace BinanceDotNet.models.requests {
     public class GetOpenOrdersRequest : SignedRequest {
 
-        public override Dictionary<string, string> BuildQueryString() {
+        public override Dictionary<string, string> BuildQueryParams() {
             return new Dictionary<string, string>() {
                 { "symbol", Symbol }
             };

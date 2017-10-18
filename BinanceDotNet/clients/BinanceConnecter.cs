@@ -2,17 +2,14 @@
 using BinanceDotNet.models;
 using BinanceDotNet.models.requests;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BinanceDotNet.clients {
     public class BinanceConnecter {
+        public RawResponse LastResponse { get { return _lastResponse; } }
+        private RawResponse _lastResponse;
+
         private const string BASE = "https://www.binance.com/api/";
         private const string BASE_ORDER = BASE + "/v3/";
 
@@ -54,7 +51,10 @@ namespace BinanceDotNet.clients {
             if (!response.IsSuccessStatusCode) {
                 throw new BinanceFailedRequest($"Request failed with status code: {response.StatusCode}. Request URL: {response.RequestMessage.RequestUri.ToString()}");
             }
-            return await RawResponse.FromHttpResponse(response);
+
+            _lastResponse = await RawResponse.FromHttpResponse(response);
+
+            return _lastResponse;
         }
 
         public async Task<RawResponse> PublicRequest(Request req) {
@@ -63,7 +63,11 @@ namespace BinanceDotNet.clients {
                 throw new Exception("WTF");
 
             var response = await ReqAsync(req.BuildUrl(), req.Method, req.UseApiKey);
-            return await RawResponse.FromHttpResponse(response);
+
+            _lastResponse = await RawResponse.FromHttpResponse(response);
+
+            return _lastResponse;
+
         }
 
 

@@ -42,6 +42,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clients\BinanceClient.cs" />
@@ -87,6 +88,8 @@
     <Compile Include="models\requests\GetMyTradesRequest.cs" />
     <Compile Include="models\requests\GetOpenOrdersRequest.cs" />
     <Compile Include="models\requests\GetOrderRequest.cs" />
+    <Compile Include="models\requests\OrderRequest.cs" />
+    <Compile Include="models\requests\PingUserStreamRequest.cs" />
     <Compile Include="models\requests\PlaceOrderTestRequest.cs" />
     <Compile Include="models\requests\RequestWithSymbol.cs" />
     <Compile Include="models\requests\PingRequest.cs" />
