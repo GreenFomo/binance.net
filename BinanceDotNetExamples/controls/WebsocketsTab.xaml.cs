@@ -1,5 +1,6 @@
 ﻿using BinanceDotNet.clients;
 using BinanceDotNet.models;
+using BinanceDotNet.models.enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -52,7 +53,7 @@ namespace BinanceDotNetExamples.controls {
         private void StartKline(object sender, RoutedEventArgs e) {
             outDg.ItemsSource = klineDataSource;
 
-            SocketApi.StartKline(GetPair(), "kline_1m", (wsKline) => {
+            SocketApi.StartKline(GetPair(), KlineInterval.Minutes1, (wsKline) => {
                 klineDataSource.Add(wsKline);
                 outDg.Items.Refresh();
             });

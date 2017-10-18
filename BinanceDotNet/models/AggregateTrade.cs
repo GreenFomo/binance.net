@@ -4,7 +4,7 @@ namespace BinanceDotNet.models {
     public class AggregateTrade {
 
         [JsonProperty("a")]
-        public int AggregateTradeId { get; set; }
+        public long AggregateTradeId { get; set; }
 
         [JsonProperty("p")]
         public decimal Price { get; set; }

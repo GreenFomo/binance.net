@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace BinanceDotNet.clients {
     public class BinanceClient {
         private BinanceConnecter _connecter;
-        
+
         public RawResponse LastResponse { get { return _connecter.LastResponse; } }
 
         public BinanceClient() {
@@ -42,7 +42,7 @@ namespace BinanceDotNet.clients {
         }
 
         //
-        public async Task<List<AggregateTrade>> GetAggTrades(string pair, long fromId = 0, long startTime = 0, long endTime = 0, int limit = 500) {
+        public async Task<List<AggregateTrade>> GetAggTrades(string pair, long? fromId = null, long? startTime = null, long? endTime = null, int? limit = null) {
             var req = new AggregateTradeRequest() { Symbol = pair };
             var resp = await _connecter.PublicRequest(req);
 
@@ -50,9 +50,8 @@ namespace BinanceDotNet.clients {
         }
 
         //
-        public async Task<List<Candlestick>> GetCandlesticks(string pair) {
-            var interval = KlineInterval.Minutes15;
-            var req = new CandlestickRequest() { Symbol = pair, Interval = interval };
+        public async Task<List<Candlestick>> GetCandlesticks(string pair, KlineInterval interval, int? limit = null, long? startTime = null, long? endTime = null) {
+            var req = new CandlestickRequest() { Symbol = pair, Interval = interval, Limit = limit, StartTime = startTime, EndTime = endTime };
 
             Console.WriteLine(interval);
 
@@ -84,8 +83,8 @@ namespace BinanceDotNet.clients {
         }
 
         //
-        public async Task<AccountInfo> GetAccountInfo() {
-            var req = new AccountInfoRequest();
+        public async Task<AccountInfo> GetAccountInfo(long? recvWindow = null) {
+            var req = new AccountInfoRequest() { RecvWindow = recvWindow };
             var resp = await _connecter.PrivateRequest(req);
 
             return JsonConvert.DeserializeObject<AccountInfo>(resp.Content);
@@ -121,22 +120,27 @@ namespace BinanceDotNet.clients {
             return JsonConvert.DeserializeObject<CancelledOrder>(resp.Content);
         }
 
-        public async Task<List<MyTrade>> GetMyTrades(string symbol) {
-            var req = new GetMyTradesRequest() { Symbol = symbol };
+        public async Task<List<MyTrade>> GetMyTrades(string symbol, int? limit = null, long? recvWindow = null) {
+            var req = new GetMyTradesRequest() { Symbol = symbol, Limit = limit, RecvWindow = recvWindow};
 
             var resp = await _connecter.PrivateRequest(req);
 
             return JsonConvert.DeserializeObject<List<MyTrade>>(resp.Content);
         }
 
-        public async Task<RawResponse> TestNewOrder(string symbol, OrderSide side, OrderType type, TimeInForce timeInForce, decimal qty, decimal price) {
+        public async Task<RawResponse> TestNewOrder(string symbol, OrderSide side, OrderType type, TimeInForce timeInForce, decimal qty, decimal price,
+            decimal? stopPrice = null, decimal? icebergQty = null, long? recvWindow = null) {
+
             var req = new PlaceOrderTestRequest() {
                 Symbol = symbol,
                 Side = side,
                 Type = type,
                 TimeInForce = timeInForce,
                 Quantity = qty,
-                Price = price
+                Price = price,
+                StopPrice = stopPrice,
+                IcebergQty = icebergQty,
+                RecvWindow = recvWindow
             };
 
             return await _connecter.PrivateRequest(req);

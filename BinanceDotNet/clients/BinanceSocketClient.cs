@@ -1,5 +1,7 @@
-﻿using BinanceDotNet.models;
+﻿using BinanceDotNet.extensions;
+using BinanceDotNet.models;
 using BinanceDotNet.models.converters;
+using BinanceDotNet.models.enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,8 +29,8 @@ namespace BinanceDotNet.clients {
             await ConnectAsync(_lastUrl, fn);
         }
 
-        public async void StartKline(string pair, string interval, Action<WsKline> fn) {
-            UpdateUrl($"{pair.ToLower()}@{interval}");
+        public async void StartKline(string pair, KlineInterval interval, Action<WsKline> fn) {
+            UpdateUrl($"{pair.ToLower()}@{interval.GetValue()}");
 
             await ConnectAsync(_lastUrl, fn);
         }

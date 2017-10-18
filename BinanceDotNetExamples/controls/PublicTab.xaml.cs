@@ -1,6 +1,7 @@
 ﻿using BinanceDotNet.clients;
 using BinanceDotNet.models;
 using BinanceDotNet.models.converters;
+using BinanceDotNet.models.enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace BinanceDotNetExamples.controls {
         }
 
         private async void getCandlesticks(object sender, RoutedEventArgs e) {
-            List<Candlestick> candles = await Api.GetCandlesticks(GetPair());
+            List<Candlestick> candles = await Api.GetCandlesticks(GetPair(), KlineInterval.Minutes15);
 
             UpdateUi(candles);
 
