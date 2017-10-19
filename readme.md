@@ -121,7 +121,7 @@ RawResponse response = await httpClient.TestNewOrder(
 );
 ```
 
-#### `POST /api/v3/order/test`
+#### `POST /api/v3/order`
 ```csharp
 Order order = await Api.PlaceNewOrder(
   "ASTETH", OrderSide.Buy, OrderType.Limit, 
