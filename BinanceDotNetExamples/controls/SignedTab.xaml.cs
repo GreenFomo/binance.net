@@ -26,6 +26,8 @@ namespace BinanceDotNetExamples.controls {
         public BinanceClient Api { get; set; }
         public Func<string> GetPair;
 
+        private const string _realPair = "ASTETH";
+
         public SignedTab() {
             InitializeComponent();
         }
@@ -46,38 +48,48 @@ namespace BinanceDotNetExamples.controls {
         }
 
         private async void getAllOrders(object sender, RoutedEventArgs e) {
-            List<Order> orders = await Api.GetAllOrders(GetPair());
-            responseBox.Text = $"Orders retrieved: {orders.Count}";
+            List<Order> orders = await Api.GetAllOrders(_realPair);
+            responseBox.Text = JsonConvert.SerializeObject(orders, Formatting.Indented);
             UpdateUi(orders);
         }
 
         private async void getOpenOrders(object sender, RoutedEventArgs e) {
             List<Order> orders = await Api.GetOpenOrders(GetPair());
-            responseBox.Text = $"Orders retrieved: {orders.Count}";
+            responseBox.Text = JsonConvert.SerializeObject(orders, Formatting.Indented); ;
             UpdateUi(orders);
         }
 
-        private async void getOrder(object sender, RoutedEventArgs e) {
+        private async void GetOrder(object sender, RoutedEventArgs e) {
             try {
-                Order order = await Api.GetOrder(GetPair(), "1234");
-                Console.WriteLine(JsonConvert.SerializeObject(order, Formatting.Indented));
+                Order order = await Api.GetOrder(_realPair, null, GetOrderId());
+                responseBox.Text = JsonConvert.SerializeObject(order, Formatting.Indented);
+                UpdateUi(new List<Order>() { order });
+
             } catch (BinanceFailedRequest ex) {
                 responseBox.Text = ex.ToString();
             }
-
-            UpdateUi<List>(null);
         }
 
-        private async void cancelOrder(object sender, RoutedEventArgs e) {
+        private async void CancelOrder(object sender, RoutedEventArgs e) {
             try {
-                CancelledOrder order = await Api.CancelOrder(GetPair(), "1234");
-                Console.WriteLine(JsonConvert.SerializeObject(order, Formatting.Indented));
+                CancelledOrder order = await Api.CancelOrder(_realPair, null, GetOrderId());
+                responseBox.Text = JsonConvert.SerializeObject(order, Formatting.Indented);
+                UpdateUi(new List<CancelledOrder>() { order });
+
             } catch (BinanceFailedRequest ex) {
                 responseBox.Text = ex.ToString();
             }
-
-            UpdateUi<List>(null);
         }
+
+        private async void PlaceOrder(object sender, RoutedEventArgs e) {
+            var order = await Api.PlaceNewOrder(_realPair, OrderSide.Buy, OrderType.Limit, TimeInForce.GoodTillCancelled, 100, 0.0001m);
+
+            responseBox.Text = JsonConvert.SerializeObject(order, Formatting.Indented);
+            orderIdTb.Text = order.OrderId.ToString();
+
+            UpdateUi(new List<Order>() { order });
+        }
+
 
         private async void testNewOrder(object sender, RoutedEventArgs e) {
             var resp = await Api.TestNewOrder(GetPair(), OrderSide.Buy, OrderType.Limit, TimeInForce.GoodTillCancelled, 100, 0.1m);
@@ -90,7 +102,17 @@ namespace BinanceDotNetExamples.controls {
             outDg.Items.Refresh();
 
             var resp = Api.LastResponse;
-            gbox.Header = $"{resp.Method} {resp.URL}";
+            if (resp != null)
+                gbox.Header = $"{resp.Method} {resp.URL}";
+        }
+
+        private long GetOrderId() {
+            if (long.TryParse(orderIdTb.Text, out long orderId)) {
+                return orderId;
+            }
+
+            return -1;
+
         }
     }
 }

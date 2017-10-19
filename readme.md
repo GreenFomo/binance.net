@@ -5,7 +5,7 @@ The repo also contains a WPF desktop app that demonstrates the usage of the Bina
 
 # TODO
 - [ ] Write docs on how to use the clients (partially done)
-- [ ] Test real orders.
+- [X] Test real orders.
 - [ ] Caching
 - [X] Add enums for each API enum.
 - [X] Add missing optional params from requests
@@ -119,6 +119,17 @@ RawResponse response = await httpClient.TestNewOrder(
   "ETHBTC", OrderSide.Buy, OrderType.Limit, 
   TimeInForce.GoodTillCancelled, 100, 0.01
 );
+```
+
+#### `POST /api/v3/order/test`
+```csharp
+Order order = await Api.PlaceNewOrder(
+  "ASTETH", OrderSide.Buy, OrderType.Limit, 
+  TimeInForce.GoodTillCancelled, 100, 0.0001m
+);
+
+long orderId = order.OrderId;
+//Use orderId with further GET/DELETE requests, as indicated below.
 ```
 
 #### `GET /api/v3/order`

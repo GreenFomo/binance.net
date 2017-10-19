@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BinanceDotNetExamples.controls"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="500">
+             d:DesignHeight="500" d:DesignWidth="800">
   <StackPanel Orientation="Vertical">
     <StackPanel Orientation="Horizontal">
       <Button Content="Test new order" Click="testNewOrder" />
@@ -14,9 +14,14 @@
 
       <Button Content="Account info" Click="getAccountInfo" />
       <Button Content="Get my trades" Click="getMyTrades" />
-
-      <Button Content="Get order" Click="getOrder"/>
-      <Button Content="Cancel order" Click="cancelOrder" />
+      
+      
+    </StackPanel>
+    <StackPanel Orientation="Horizontal">
+      <Button Content="Place order" Click="PlaceOrder"/>
+      <Button Content="Get order" Click="GetOrder"/>
+      <Button Content="Cancel order" Click="CancelOrder" />
+      <TextBox Name="orderIdTb" Width="100">Order ID</TextBox>
     </StackPanel>
 
     <GroupBox Header="---" Name="gbox">
@@ -28,7 +33,7 @@
       
       <StackPanel Orientation="Horizontal" Height="500">
         <TextBox Name="responseBox" MinWidth="200" />
-        <DataGrid Height="500" Name="outDg" MinWidth="200" IsReadOnly="True">
+        <DataGrid Height="500" Name="outDg" MinWidth="200" IsReadOnly="True" SelectionUnit="Cell">
 
         </DataGrid>
       </StackPanel>

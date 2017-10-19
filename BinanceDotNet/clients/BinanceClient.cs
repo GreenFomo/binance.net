@@ -146,6 +146,25 @@ namespace BinanceDotNet.clients {
             return await _connecter.PrivateRequest(req);
         }
 
+        public async Task<Order> PlaceNewOrder(string symbol, OrderSide side, OrderType type, TimeInForce timeInForce, decimal qty, decimal price,
+            decimal? stopPrice = null, decimal? icebergQty = null, long? recvWindow = null) {
+
+            var req = new PlaceOrderRequest() {
+                Symbol = symbol,
+                Side = side,
+                Type = type,
+                TimeInForce = timeInForce,
+                Quantity = qty,
+                Price = price,
+                StopPrice = stopPrice,
+                IcebergQty = icebergQty,
+                RecvWindow = recvWindow
+            };
+            var resp = await _connecter.PrivateRequest(req);
+            Console.WriteLine(resp.Content);
+            return JsonConvert.DeserializeObject<Order>(resp.Content);
+        }
+
         public async Task<UserDataEndpoint> StartUserStream() {
             var req = new StartUserStreamRequest();
             var resp = await _connecter.PublicRequest(req);
