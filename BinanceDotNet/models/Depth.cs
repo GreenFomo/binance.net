@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace BinanceDotNet.models {
-    public class Depth {
+    public class Depth : WsBase {
         
         public long LastUpdateId { get; set; }
 

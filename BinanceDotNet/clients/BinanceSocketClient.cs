@@ -1,4 +1,5 @@
-﻿using BinanceDotNet.extensions;
+﻿using BinanceDotNet.caching;
+using BinanceDotNet.extensions;
 using BinanceDotNet.models;
 using BinanceDotNet.models.converters;
 using BinanceDotNet.models.enums;
@@ -15,9 +16,14 @@ namespace BinanceDotNet.clients {
     public class BinanceSocketClient {
         public string LastUrl { get { return _lastUrl; } }
         private string _lastUrl;
+        private DepthCacher _depthCacher;
 
         public readonly string WsEndpoint = "wss://stream.binance.com:9443/ws";
         public bool running;
+
+        public BinanceSocketClient() {
+            _depthCacher = new DepthCacher();
+        }
 
         public void Stop() {
             running = false;
@@ -72,6 +78,7 @@ namespace BinanceDotNet.clients {
                     if (type == typeof(Depth)) {
                         var obj = JsonConvert.DeserializeObject<T>(line, new CustomDepthConverter("u", "b", "a"));
                         fn?.Invoke(obj);
+                        _depthCacher.Cache<T>(obj);
                     } else if (type == typeof(string)) {
                         Console.WriteLine("[WS-string]: " + line);
                     } else {

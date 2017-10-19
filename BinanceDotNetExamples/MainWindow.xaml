@@ -10,7 +10,8 @@
   <StackPanel>
     <ComboBox Name="pairSelector" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="250,0,0,0" Panel.ZIndex="100">
       <ComboBoxItem IsSelected="True">ETH/BTC</ComboBoxItem>
-      <ComboBoxItem >BNB/BTC</ComboBoxItem>
+      <ComboBoxItem>AST/ETH</ComboBoxItem>
+      <ComboBoxItem>BNB/BTC</ComboBoxItem>
       <ComboBoxItem>BNB/ETH</ComboBoxItem>
     </ComboBox>
     <TabControl>

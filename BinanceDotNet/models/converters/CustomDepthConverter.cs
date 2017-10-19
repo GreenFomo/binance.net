@@ -26,6 +26,10 @@ namespace BinanceDotNet.models.converters {
 
             root.LastUpdateId = (long)obj[idKey];
 
+            root.EventTime = (long)obj["E"];
+            root.EventType = (string)obj["e"];
+            root.Symbol = (string)obj["s"];
+
             var rawBids = obj[bidsKey];
             
             foreach (var rawBid in rawBids) {
